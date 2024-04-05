@@ -1,0 +1,117 @@
+<ul class="alert alert-danger" *ngIf="errors.length > 0">
+  <li
+    class="list-group-item list-group-item-danger list-group-item-action my-2"
+    *ngFor="let err of errors"
+  >
+    {{ err }}
+  </li>
+</ul>
+<div class="card bg-dark text-white">
+  <div class="card-header">{{ titulo }}</div>
+  <div class="card-body">
+    <form [formGroup]="formulario" (submit)="create()">
+      <div class="form-group row">
+        <label for="nombre" class="col-form-label col-sm-2">Nombre</label>
+        <div class="col-sm-6">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="nombre"
+            name="nombre"
+          />
+          <!-- required minlength="3"-->
+          <div
+            class="alert alert-danger"
+            *ngIf="
+              formulario.get('nombre')?.invalid &&
+              (formulario.get('nombre')?.dirty ||
+                formulario.get('nombre')?.touched)
+            "
+          >
+            <div *ngIf="formulario.get('nombre')?.errors?.['required']">
+              El nombre es requerido
+            </div>
+            <div *ngIf="formulario.get('nombre')?.errors?.['minlength']">
+              El nombre debe tener al menos 3 caracteres
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="apellido" class="col-form-label col-sm-2">Apellido</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" formControlName="apellido" />
+          <!-- required-->
+          <div
+            class="alert alert-danger"
+            *ngIf="
+              formulario.get('apellido')?.invalid &&
+              (formulario.get('apellido')?.dirty ||
+                formulario.get('apellido')?.touched)
+            "
+          >
+            <div *ngIf="formulario.get('apellido')?.errors?.['required']">
+              El apellido es requerido
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="email" class="col-form-label col-sm-2">Email</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" formControlName="email" />
+          <!-- required-->
+          <div
+            class="alert alert-danger"
+            *ngIf="
+              formulario.get('email')?.invalid &&
+              (formulario.get('email')?.dirty ||
+                formulario.get('email')?.touched)
+            "
+          >
+            <div *ngIf="formulario.get('email')?.errors?.['required']">
+              El email es requerido
+            </div>
+            <div *ngIf="formulario.get('email')?.errors?.['email']">
+              El formato del email es invalido
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="createAt" class="col-form-label col-sm-2">Fecha</label>
+        <div class="col-sm-6">
+          <input type="date" class="form-control" formControlName="createAt" />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-sm-6">
+          <button
+            class="btn btn-primary"
+            role="button"
+            type="submit"
+            *ngIf="!editClient; else elseBlock"
+            [disabled]="!formulario.valid"
+          >
+            Crear
+          </button>
+
+          <ng-template #elseBlock>
+            <button
+              class="btn btn-primary"
+              role="button"
+              (click)="update()"
+              [disabled]="!formulario.valid"
+            >
+              Editar
+            </button>
+          </ng-template>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

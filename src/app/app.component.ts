@@ -3,8 +3,12 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title = 'CursoAngularApp';
+  title = 'Bienvenido a Angular';
+
+  curso: string = 'Angular con Spring 5';
+
+  profesor: string = 'Andrés Guzmán';
 }
