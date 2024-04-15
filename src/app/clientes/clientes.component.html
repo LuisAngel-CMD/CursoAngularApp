@@ -1,3 +1,8 @@
+<detalle-cliente
+  *ngIf="clienteSeleccionado"
+  [cliente]="clienteSeleccionado"
+></detalle-cliente>
+
 <div class="card border-primary mb-3">
   <div class="card-header">Clientes</div>
   <div class="card-body text-primary">
@@ -25,7 +30,15 @@
       </thead>
       <tbody>
         <tr *ngFor="let cliente of clientes">
-          <td>{{ cliente.id }}</td>
+          <td>
+            <button
+              type="button"
+              (click)="abrirModal(cliente)"
+              class="btn btn-success btn-sm"
+            >
+              {{ cliente.id }}
+            </button>
+          </td>
           <td>{{ cliente.nombre | uppercase }}</td>
           <td>{{ cliente.apellido }}</td>
           <td>{{ cliente.email }}</td>
@@ -36,6 +49,7 @@
               name="editar"
               (click)="edit(cliente)"
               class="btn btn-primary btn-sm"
+              [routerLink]="['/clientes/form', cliente.id]"
             >
               editar
             </button>

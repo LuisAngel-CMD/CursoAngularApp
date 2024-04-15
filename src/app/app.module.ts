@@ -22,6 +22,7 @@ import { Routes } from '@angular/router';
 
 import { registerLocaleData } from '@angular/common';
 import localeES from '@angular/common/locales/es';
+import { DetalleComponent } from './clientes/detalle/detalle.component';
 
 registerLocaleData(localeES, 'es');
 
@@ -49,6 +50,7 @@ const momentDateModuleProvider: FactoryProvider = {
     ClientesComponent,
     FormComponent,
     PaginatorComponent,
+    DetalleComponent,
   ],
   imports: [
     BrowserModule,

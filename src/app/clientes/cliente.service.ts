@@ -3,7 +3,13 @@ import { Injectable } from '@angular/core';
 
 import { Cliente } from './cliente';
 import { Observable, throwError } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpEvent,
+  HttpHeaders,
+  HttpRequest,
+} from '@angular/common/http';
+
 import { map, catchError, tap } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 
@@ -11,7 +17,7 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class ClienteService {
-  private urlEndPoint: string = 'http://192.168.1.12:8080/backend_sprintboot';
+  private urlEndPoint: string = 'http://localhost:8080';
 
   private httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
@@ -115,5 +121,20 @@ export class ClienteService {
           return throwError(e);
         })
       );
+  }
+
+  subirFoto(archivo: File, id: any): Observable<HttpEvent<any>> {
+    let formData = new FormData();
+    formData.append('archivo', archivo);
+    formData.append('id', id);
+
+    const req = new HttpRequest(
+      'POST',
+      `${this.urlEndPoint}/api/clientes/upload`,
+      formData,
+      {}
+    );
+
+    return this.http.request(req);
   }
 }

@@ -4,6 +4,7 @@ export class Cliente {
   apellido: string;
   createAt: Date;
   email: string;
+  foto: string;
 
   constructor() {
     this.id = 0; // o cualquier valor por defecto que prefieras
@@ -11,5 +12,6 @@ export class Cliente {
     this.apellido = '';
     this.createAt = new Date();
     this.email = '';
+    this.foto = '';
   }
 }
