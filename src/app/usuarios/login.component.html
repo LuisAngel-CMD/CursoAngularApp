@@ -1,0 +1,23 @@
+<div class="card border-primary mb-3 text-center" style="display: block; width: 50%; margin-left: auto; margin-right: auto;">
+  <div class="card-header ">{{ titulo }}</div>
+  <div class="card-body text-primary text-center my-3 p-5 ">
+
+
+    <form method="post" >
+      <div class="form-gorup  mb-3">
+        <input  type="text" class="form-control"
+        name="username" id="username" placeholder="Username" autofocus required>
+      </div>
+
+      <div class="form-gorup  mb-3">
+        <input  type="password" class="form-control"
+        name="password" id="password" placeholder="Password" required>
+      </div>
+
+
+      <div class="form-gorup mb-3">
+        <button routerLink="/clientes" type="button" class="btn btn-lg btn-primary btn-block" value="Login">Omitir Login</button>
+      </div>
+    </form>
+  </div>
+</div>

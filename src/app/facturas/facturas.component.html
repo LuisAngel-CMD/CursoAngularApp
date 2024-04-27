@@ -1,0 +1,88 @@
+<div class="card bg-dark text-white">
+  <div class="card-header">{{ titulo }}: {{ factura.descripcion }}</div>
+  <div class="card-body">
+    <h4 class="card-title">
+      <a (click)="Volver()" class="btn btn-light btn-xs">&laquo; Volver</a>
+    </h4>
+
+    <form [formGroup]="formulario">
+      <div class="form-group row">
+        <label for="cliente" class="col-sm-2 col-form-label">Cliente</label>
+        <div class="col-sm-6">
+          <input type="text" name="cliente" value="{{factura.cliente.nombre}} {{factura.cliente.apellido}}" class="form-control" readonly/>
+        </div>
+      </div>
+
+      <div class="form-group row" >
+        <label for="descripcion" class="col-sm-2 col-form-label">Descripcion</label>
+        <div class="col-sm-6">
+          <input formControlName="descripcion" type="text" name="descripcion" class="form-control" required placeholder="Describa la Factura, Es Requerido">
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="observacion" class="col-sm-2 col-form-label">Observacion</label>
+        <div class="col-sm-6">
+          <textarea formControlName="observacion" name="observacion" class="form-control"></textarea>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="producto" class="col-form-label col-sm-2">Producto</label>
+        <div class="col-sm-6">
+          <select class="form-control" formControlName="producto" (change)="getProduct()" [selectedIndex]="0">
+            <option value="">--- Seleccione un producto ---</option>
+            @for (producto of productos; track producto) {
+              <option [ngValue]="producto | json">
+                {{ producto.nombre }}
+              </option>
+            }
+          </select>
+        </div>
+      </div>
+      <table class="table table-striped table-hover table-sm">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+            <th>Total</th>
+            <th>Eliminar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of arrFactura">
+            <td>{{ item.producto.nombre }}</td>
+            <td>{{ item.producto.precio | currency }}</td>
+            <!-- <td> -->
+              <!-- <input type="number" value="{{item.cantidad}}" class="form-control col-sm-4" (change)="actualizarCantidad(item.producto.id, $event)"> -->
+            <!-- </td> -->
+            <td>{{ item.cantidad }}</td>
+            <td>{{ item.importe | currency }}</td>
+            <td>
+              <button
+                type="button"
+                name="eliminar"
+                (click)="eliminarItemFactura(item.id)"
+                class="btn btn-danger btn-sm">
+                X
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h5 class="float-right">
+        Gran Total: <span class="badge badge-secondary">{{ calcularGrantotal() | currency }}</span>
+      </h5>
+
+
+      <div class="form-group row">
+        <div class="col-sm-6">
+          <input type="submit" (click)="create()"  value="Crear Factura" class="btn btn-secondary"/>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>

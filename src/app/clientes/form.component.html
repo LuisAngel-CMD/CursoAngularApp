@@ -89,6 +89,31 @@
       </div>
 
       <div class="form-group row">
+        <label for="region" class="col-form-label col-sm-2">Region</label>
+        <div class="col-sm-6">
+          <select [(ngModel)]="selectedOption" [compareWith]="compararRegion" type="text" class="form-control" formControlName="region" name="region">
+            <option [ngValue]="undefined">--- Seleccione una region ---</option>
+            <option *ngFor="let region of regiones" [ngValue]="region">
+              {{ region.nombre }}
+            </option>
+            <!-- required-->
+            <div
+              class="alert alert-danger"
+              *ngIf="
+                formulario.get('region')?.invalid &&
+                (formulario.get('region')?.dirty ||
+                  formulario.get('region')?.touched)
+              "
+            >
+              <div *ngIf="formulario.get('region')?.errors?.['required']">
+                La region es requerida
+              </div>
+            </div>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group row">
         <div class="col-sm-6">
           <button
             class="btn btn-primary"

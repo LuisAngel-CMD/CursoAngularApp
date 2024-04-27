@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Cliente } from './cliente';
+import { Region } from './region';
 import { ClienteService } from './cliente.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import swal from 'sweetalert2';
@@ -12,12 +13,16 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class FormComponent implements OnInit, OnDestroy {
   public cliente: Cliente = new Cliente();
   public titulo: string = 'Crear Cliente';
+
+  selectedOption: any = undefined;
+  regiones: Region[] = [];
   errors: string[] = [];
   formulario = new FormGroup({
     nombre: new FormControl('', Validators.required),
     email: new FormControl('', Validators.required),
     apellido: new FormControl(''),
     createAt: new FormControl('', Validators.required),
+    region: new FormControl('', Validators.required),
   });
 
   editClient = sessionStorage.getItem('edit');
@@ -35,6 +40,7 @@ export class FormComponent implements OnInit, OnDestroy {
         apellido: JSON.parse(this.editClient).apellido,
         email: JSON.parse(this.editClient).email,
         createAt: JSON.parse(this.editClient).createAt,
+        region: JSON.parse(this.editClient).region
       });
 
       this.idEdit = JSON.parse(this.editClient).id;
@@ -59,6 +65,9 @@ export class FormComponent implements OnInit, OnDestroy {
           .subscribe((cliente) => (this.cliente = cliente));
       }
     });
+    this.clienteService.getRegiones().subscribe((regiones) => {
+      this.regiones = regiones
+    });
   }
 
   create(): void {
@@ -73,7 +82,9 @@ export class FormComponent implements OnInit, OnDestroy {
           ).getTime() +
             new Date().getTimezoneOffset() * 60000
         ),
+        region: this.formulario.get('region')?.value
       };
+      console.log(obj);
       this.clienteService.create(obj).subscribe(
         (cliente) => {
           this.router.navigate(['/clientes']);
@@ -104,6 +115,7 @@ export class FormComponent implements OnInit, OnDestroy {
           ).getTime() +
             new Date().getTimezoneOffset() * 60000
         ),
+        region: this.formulario.get('region')?.value
       };
       this.clienteService.update(obj, this.idEdit).subscribe(
         (cliente) => {
@@ -121,5 +133,13 @@ export class FormComponent implements OnInit, OnDestroy {
         }
       );
     }
+  }
+
+  compararRegion(o1: Region, o2: Region){
+    if( o1 === undefined && o2 === undefined){
+      return true;
+    }
+    return o1 == null || o2 == null || o1 === undefined || o2 === undefined? false : o1.id === o2.id;
+
   }
 }

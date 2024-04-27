@@ -3,7 +3,7 @@
   [cliente]="clienteSeleccionado"
 ></detalle-cliente>
 
-<div class="card border-primary mb-3">
+<div class="card border-primary mb-3 mt-3 ">
   <div class="card-header">Clientes</div>
   <div class="card-body text-primary">
     <h5 class="card-title">Listado de clientes</h5>
@@ -24,6 +24,7 @@
           <th>apellido</th>
           <th>email</th>
           <th>fecha</th>
+          <th>Crear factura</th>
           <th>editar</th>
           <th>eliminar</th>
         </tr>
@@ -31,26 +32,37 @@
       <tbody>
         <tr *ngFor="let cliente of clientes">
           <td>
-            <button
-              type="button"
-              (click)="abrirModal(cliente)"
-              class="btn btn-success btn-sm"
-            >
-              {{ cliente.id }}
-            </button>
+            <img
+                  (click)="abrirModal(cliente)"
+                  *ngIf="cliente?.foto"
+                  src="http://localhost:8080/api/uploads/img/{{ cliente.foto }}"
+                  alt="{{ cliente.foto }}"
+                  class="img-thumbnail img-fluid mb-3 rounded d-block mx-auto"
+                  style="width: 60px; cursor: pointer;"
+                />
+                <img
+                  (click)="abrirModal(cliente)"
+                  *ngIf="!cliente?.foto"
+                  src="http://localhost:8080/images/No-Usuario.png"
+                  alt="sin foto"
+                  class="img-thumbnail img-fluid mb-3 rounded d-block mx-auto"
+                  style="width: 60px; cursor: pointer;"
+                />
           </td>
           <td>{{ cliente.nombre | uppercase }}</td>
           <td>{{ cliente.apellido }}</td>
           <td>{{ cliente.email }}</td>
           <td>{{ cliente.createAt | date : "EEEE dd, MMMM yyyy" }}</td>
+          <td><button type="button" class="btn btn-success btn-sm" (click)="factura(cliente)">
+            Crear factura</button></td>
           <td>
+            <!--[routerLink]="['/facturas/form', cliente.id]"-->
             <button
               type="button"
               name="editar"
               (click)="edit(cliente)"
               class="btn btn-primary btn-sm"
-              [routerLink]="['/clientes/form', cliente.id]"
-            >
+              [routerLink]="['/clientes/form', cliente.id]">
               editar
             </button>
           </td>
@@ -59,8 +71,7 @@
               type="button"
               name="eliminar"
               (click)="delete(cliente)"
-              class="btn btn-danger btn-sm"
-            >
+              class="btn btn-danger btn-sm">
               eliminar
             </button>
           </td>

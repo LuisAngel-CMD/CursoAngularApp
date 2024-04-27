@@ -1,65 +1,124 @@
-<div class="card bg-dark text-white">
-  <div class="card-header">{{ titulo }}</div>
-  <div class="card-body">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm">
-          <ul class="list-group text-dark mb-3">
-            <li class="list-group-item active">{{ cliente.nombre }}</li>
-            <li class="list-group-item">{{ cliente.apellido }}</li>
-            <li class="list-group-item">{{ cliente.email }}</li>
-            <li class="list-group-item">
-              {{ cliente.createAt | date : "fullDate" }}
-            </li>
-          </ul>
+<div class="abrir-Modal animacion fadeIn" *ngIf="modalService.modal">
+  <div  class="modal" tabindex="-1" style="display: block;">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ titulo }}</h5>
+          <button (click)="cerrarModal()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm">
+                <ul class="list-group text-dark mb-3">
+                  <li class="list-group-item active">{{ cliente.nombre }}</li>
+                  <li class="list-group-item">{{ cliente.apellido }}</li>
+                  <li class="list-group-item">{{ cliente.email }}</li>
+                  <li class="list-group-item">
+                    {{ cliente.createAt | date : "fullDate" }}
+                  </li>
+                  <li class="list-group-item">{{ cliente.region.nombre }}</li>
+                </ul>
 
-          <div id="input-group">
-            <div class="custom-file">
-              <input
-                (change)="selectFile($event)"
-                type="file"
-                class="custom-file-input"
-                id="inputGroupFile04"
-                aria-describedby="inputGroupFileAddon04"
-              />
-              <label class="custom-file-label" for="inputGroupFile04"
-                >Seleccionar foto</label
-              >
-            </div>
-            <div class="input-group-append mt-2">
-              <button
-                [disabled]="!fotoSeleccionada"
-                (click)="subirFoto()"
-                class="btn btn-outline-success"
-                type="button"
-                id="inputGroupFileAddon04"
-              >
-                Subir
-              </button>
-            </div>
-          </div>
+                <div id="input-group">
+                  <div class="custom-file">
+                    <input
+                      (change)="selectFile($event)"
+                      type="file"
+                      class="custom-file-input"
+                      id="inputGroupFile04"
+                      aria-describedby="inputGroupFileAddon04"
+                    />
+                    <label class="custom-file-label" for="inputGroupFile04"
+                      >Seleccionar foto</label
+                    >
+                  </div>
+                  <div class="input-group-append mt-2">
+                    <button
+                      [disabled]="!fotoSeleccionada"
+                      (click)="subirFoto()"
+                      class="btn btn-outline-success"
+                      type="button"
+                      id="inputGroupFileAddon04"
+                    >
+                      Subir
+                    </button>
+                  </div>
+                </div>
 
-          <div *ngIf="progreso > 0" class="progress">
-            <div
-              class="progress-bar progress-bar-striped progress-bar-animated"
-              [ngStyle]="{ width: progreso + '%' }"
-              [attr.aria-valuenow]="progreso"
-              aria-valuemin="0"
-              aria-valuemax="100"
-            >
-              {{ progreso }}%
+                <div *ngIf="progreso != 0" class="progress">
+                  <div
+                    class="progress-bar progress-bar-striped progress-bar-animated"
+                    [ngStyle]="{ width: progreso + '%' }"
+                    [attr.aria-valuenow]="progreso"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  >
+                    {{ progreso }}%
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm">
+                <img
+                  *ngIf="cliente?.foto"
+                  src="http://localhost:8080/api/uploads/img/{{ cliente.foto }}"
+                  alt="{{ cliente.foto }}"
+                  class="img-thumbnail img-fluid mb-3 rounded d-block mx-auto"
+                />
+              </div>
             </div>
+            <div class="row">
+              <button type="button" class="btn btn-success btn-sm" (click)="factura(cliente)">Crear factura</button>
+            </div>
+            <div class="row">
+              <div class="alert alert-info my-4" *ngIf="cliente.facturas.length==0">
+                  No hay facturas asociadas a este cliente {{ cliente.nombre }} {{ cliente.apellido }}
+              </div>
+              <table class="table table-bordered table-striped my-4" *ngIf="cliente.facturas.length > 0">
+                <thead>
+                  <tr>
+                    <th>Folio</th>
+                    <th>Descripción</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Detalle</th>
+                    <th>Eliminar</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let factura of cliente.facturas">
+                    <td>{{ factura.id }}</td>
+                    <td>{{ factura.descripcion }}</td>
+                    <td>{{ factura.createAt | date : "EEEE dd, MMMM yyyy" }}</td>
+                    <td>{{ factura.total }}</td>
+                    <td>
+                      <button
+                        type="button"
+                        (click)="verFactura(factura)"
+                        class="btn btn-primary btn-sm">
+                        Ver
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        type="button"
+                        name="eliminar"
+                        (click)="delete(factura)"
+                        class="btn btn-danger btn-sm">
+                        eliminar
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
           </div>
         </div>
-        <div class="col-sm">
-          <img
-            *ngIf="cliente?.foto"
-            src="http://localhost:8080/api/uploads/img/{{ cliente.foto }}"
-            alt="{{ cliente.foto }}"
-            class="img-thumbnail img-fluid mb-3 rounded d-block mx-auto"
-          />
+        <div class="modal-footer">
+          <button (click)="cerrarModal()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
   </div>
-</div>
+  </div>

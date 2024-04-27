@@ -1,17 +1,13 @@
+import { Factura } from './../facturas/models/factura';
+import { Region } from './region';
 export class Cliente {
-  id: number;
-  nombre: string;
-  apellido: string;
-  createAt: Date;
-  email: string;
-  foto: string;
+  id: number = 0;
+  nombre: string = '';
+  apellido: string = '';
+  createAt: Date = new Date();
+  email: string = '';
+  foto: string = '';
+  region: Region = new Region();
+  facturas: Array<Factura> = [];
 
-  constructor() {
-    this.id = 0; // o cualquier valor por defecto que prefieras
-    this.nombre = '';
-    this.apellido = '';
-    this.createAt = new Date();
-    this.email = '';
-    this.foto = '';
-  }
 }

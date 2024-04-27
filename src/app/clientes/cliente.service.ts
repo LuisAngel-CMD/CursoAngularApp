@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 //import { formatDate, DatePipe } from '@angular/common';
 
 import { Cliente } from './cliente';
+import { Region } from './region';
 import { Observable, throwError } from 'rxjs';
 import {
   HttpClient,
-  HttpEvent,
   HttpHeaders,
   HttpRequest,
 } from '@angular/common/http';
@@ -22,6 +22,24 @@ export class ClienteService {
   private httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
   constructor(private http: HttpClient, private router: Router) {}
+
+  getRegiones(): Observable<Region[]> {
+    return this.http
+      .get(this.urlEndPoint + '/api/clientes/regiones')
+
+      .pipe(
+        catchError((error: any) => {
+
+          console.error('Error al obtener las regiones:', error);
+          return throwError(
+            'Error al obtener las regiones. Por favor, inténtalo de nuevo más tarde.'
+          );
+        }),
+        map((response: any) => {
+          return response as Region[];
+        })
+      );
+  }
 
   getClientes(page: number): Observable<any> {
     return this.http.get(this.urlEndPoint + '/api/clientes/page/' + page).pipe(
@@ -67,7 +85,7 @@ export class ClienteService {
 
   create(cliente: any): Observable<Cliente> {
     return this.http
-      .post<Cliente>(this.urlEndPoint, cliente, { headers: this.httpHeaders })
+      .post<Cliente>(`${this.urlEndPoint}/api/clientes`, cliente, { headers: this.httpHeaders })
       .pipe(
         catchError((e) => {
           if (e.status == 400) {
@@ -123,7 +141,7 @@ export class ClienteService {
       );
   }
 
-  subirFoto(archivo: File, id: any): Observable<HttpEvent<any>> {
+  subirFoto(archivo: File, id: any): Observable<any> {
     let formData = new FormData();
     formData.append('archivo', archivo);
     formData.append('id', id);
@@ -137,4 +155,6 @@ export class ClienteService {
 
     return this.http.request(req);
   }
+
+
 }
